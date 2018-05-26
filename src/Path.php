@@ -15,7 +15,7 @@ class Path
     public static function root($segments = null)
     {
         $path = __DIR__;
-        for ($c1 = 0; $c1 < 5; $c1++) {
+        for ($c1 = 0; $c1 < 4; $c1++) {
             $path = dirname($path);
         }
         $path = str_replace('\\', '/', $path);
@@ -87,7 +87,7 @@ class Path
      */
     protected static function packagePath()
     {
-        return dirname(dirname(__DIR__));
+        return dirname(__DIR__);
     }
 
     /**

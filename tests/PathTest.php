@@ -21,14 +21,14 @@ class PathTest extends TestCase
 
         // Prepare root directory.
         $this->rootDirectory = __DIR__;
-        for ($c1 = 0; $c1 < 4; $c1++) {
+        for ($c1 = 0; $c1 < 3; $c1++) {
             $this->rootDirectory = dirname($this->rootDirectory);
         }
         $this->vendorBaseDirectory = basename($this->rootDirectory);
         $this->rootDirectory = dirname($this->rootDirectory);
 
         // Get package details.
-        $packagePath = dirname(dirname(__DIR__));
+        $packagePath = dirname(__DIR__);
         $this->currentPackage = basename($packagePath);
         $this->currentVendor = basename(dirname($packagePath));
     }
