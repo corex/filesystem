@@ -1,0 +1,29 @@
+{
+    "name": "corex/filesystem",
+    "type": "library",
+    "description": "Filesystem (directory, file, ...)",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "CoRex",
+            "email": "dev@corex.dk"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "corex/helpers": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "CoRex\\Filesystem\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\CoRex\\Filesystem\\": "tests"
+        }
+    }
+}
