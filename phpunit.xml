@@ -10,9 +10,7 @@
     </php>
 
     <logging>
-        <log type="coverage-html" target="./log/" charset="UTF-8"
-             yui="true" highlight="true" lowUpperBound="50" highLowerBound="80"
-             showUncoveredFiles="true" />
+        <log type="coverage-html" target="./log/" lowUpperBound="50" highLowerBound="80" showUncoveredFiles="true" />
     </logging>
 
     <filter>
