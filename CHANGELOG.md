@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 1.1.0
+
+### Added
+- Added Json class to set/get data in json-files.
+
 ## 1.0.2
 
 ### Fixed
