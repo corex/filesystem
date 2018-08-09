@@ -28,6 +28,33 @@ class JsonTest extends TestCase
     }
 
     /**
+     * Test getFilename.
+     *
+     * @throws \Exception
+     */
+    public function testGetFilename()
+    {
+        $json = new Json($this->tempFilename);
+        $this->assertEquals($this->tempFilename, $json->getFilename());
+    }
+
+    /**
+     * Test exist.
+     *
+     * @throws \Exception
+     */
+    public function testExist()
+    {
+        // Make sure it is removed.
+        File::delete($this->tempFilename);
+
+        $json = new Json($this->tempFilename);
+        $this->assertFalse($json->exist());
+        $json->save();
+        $this->assertTrue($json->exist());
+    }
+
+    /**
      * Test keyOrder value 1-2.
      *
      * @throws \Exception

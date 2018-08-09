@@ -26,6 +26,26 @@ class Json
     }
 
     /**
+     * Get filename.
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * Exist.
+     *
+     * @return boolean
+     */
+    public function exist()
+    {
+        return file_exists($this->getFilename());
+    }
+
+    /**
      * Set key-order for json-file.
      *
      * @param array $keyOrder

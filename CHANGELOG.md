@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 1.2.0
+
+### Added.
+- Added Json->getFilename() and Json->exist().
+
 ## 1.1.0
 
 ### Added
