@@ -16,7 +16,6 @@ class Json
      *
      * @param string $filename
      * @param array $keyOrder Order of keys in json.
-     * @throws \Exception
      */
     public function __construct($filename, array $keyOrder = [])
     {

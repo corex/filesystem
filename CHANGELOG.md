@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 1.2.1
+
+### Fixed
+- Removed false phpdoc @throws on constructor for Json.
+
 ## 1.2.0
 
 ### Added.
