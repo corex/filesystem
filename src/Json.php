@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CoRex\Filesystem;
 
 use CoRex\Helpers\Traits\DataTrait;
@@ -8,16 +10,19 @@ class Json
 {
     use DataTrait;
 
+    /** @var string */
     private $filename;
+
+    /** @var string[] */
     private $keyOrder = [];
 
     /**
-     * Constructor.
+     * Json.
      *
      * @param string $filename
-     * @param array $keyOrder Order of keys in json.
+     * @param string[] $keyOrder Order of keys in json.
      */
-    public function __construct($filename, array $keyOrder = [])
+    public function __construct(string $filename, array $keyOrder = [])
     {
         $this->filename = $filename;
         $this->setKeyOrder($keyOrder);
@@ -29,7 +34,7 @@ class Json
      *
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
@@ -37,9 +42,9 @@ class Json
     /**
      * Exist.
      *
-     * @return boolean
+     * @return bool
      */
-    public function exist()
+    public function exist(): bool
     {
         return file_exists($this->getFilename());
     }
@@ -47,9 +52,9 @@ class Json
     /**
      * Set key-order for json-file.
      *
-     * @param array $keyOrder
+     * @param string[] $keyOrder
      */
-    public function setKeyOrder(array $keyOrder)
+    public function setKeyOrder(array $keyOrder): void
     {
         $this->keyOrder = $keyOrder;
     }
@@ -57,7 +62,7 @@ class Json
     /**
      * Save.
      */
-    public function save()
+    public function save(): void
     {
         $result = [];
         $data = $this->all();

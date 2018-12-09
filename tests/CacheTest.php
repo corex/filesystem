@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\CoRex\Filesystem;
 
 use CoRex\Filesystem\Cache;
@@ -10,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class CacheTest extends TestCase
 {
+    /** @var string */
     private $tempDirectory;
 
     /**
@@ -17,7 +20,7 @@ class CacheTest extends TestCase
      *
      * @throws \Exception
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->tempDirectory = sys_get_temp_dir();
@@ -30,7 +33,7 @@ class CacheTest extends TestCase
     /**
      * Tear down.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         Directory::delete($this->tempDirectory);
@@ -39,7 +42,7 @@ class CacheTest extends TestCase
     /**
      * Test key.
      */
-    public function testKey()
+    public function testKey(): void
     {
         $key1 = Cache::key('test');
         $key2 = Cache::key('test', ['test1', 'test2']);
@@ -53,7 +56,7 @@ class CacheTest extends TestCase
      *
      * @throws Exception
      */
-    public function testPath()
+    public function testPath(): void
     {
         // Check that path is not set.
         $this->assertNull(Cache::path());
@@ -75,7 +78,7 @@ class CacheTest extends TestCase
     /**
      * Test lifetime not set.
      */
-    public function testLifetimeNotSet()
+    public function testLifetimeNotSet(): void
     {
         $this->assertEquals(0, Cache::lifetime());
     }
@@ -83,7 +86,7 @@ class CacheTest extends TestCase
     /**
      * Test lifetime set with seconds.
      */
-    public function testLifetimeSetWithSeconds()
+    public function testLifetimeSetWithSeconds(): void
     {
         Cache::lifetime(4);
         $this->assertEquals(4, Cache::lifetime());
@@ -92,7 +95,7 @@ class CacheTest extends TestCase
     /**
      * Test lifetime set with minutes.
      */
-    public function testLifetimeSetWithMinutes()
+    public function testLifetimeSetWithMinutes(): void
     {
         Cache::lifetime('4m');
         $this->assertEquals(240, Cache::lifetime());
@@ -101,7 +104,7 @@ class CacheTest extends TestCase
     /**
      * Test lifetime set with hours.
      */
-    public function testLifetimeSetWithHours()
+    public function testLifetimeSetWithHours(): void
     {
         Cache::lifetime('4h');
         $this->assertEquals(14400, Cache::lifetime());
@@ -110,7 +113,7 @@ class CacheTest extends TestCase
     /**
      * Test lifetime not set (storage 'test').
      */
-    public function testLifetimeNotSetStorageTest()
+    public function testLifetimeNotSetStorageTest(): void
     {
         $this->assertEquals(0, Cache::lifetime(null, 'test'));
     }
@@ -118,7 +121,7 @@ class CacheTest extends TestCase
     /**
      * Test lifetime set with seconds (storage 'test').
      */
-    public function testLifetimeSetWithSecondsStorageTest()
+    public function testLifetimeSetWithSecondsStorageTest(): void
     {
         Cache::lifetime(4, 'test');
         $this->assertEquals(4, Cache::lifetime(null, 'test'));
@@ -127,7 +130,7 @@ class CacheTest extends TestCase
     /**
      * Test lifetime set with minutes (storage 'test').
      */
-    public function testLifetimeSetWithMinutesStorageTest()
+    public function testLifetimeSetWithMinutesStorageTest(): void
     {
         Cache::lifetime('4m', 'test');
         $this->assertEquals(240, Cache::lifetime(null, 'test'));
@@ -136,7 +139,7 @@ class CacheTest extends TestCase
     /**
      * Test lifetime set with hours (storage 'test').
      */
-    public function testLifetimeSetWithHoursStorageTest()
+    public function testLifetimeSetWithHoursStorageTest(): void
     {
         Cache::lifetime('4h', 'test');
         $this->assertEquals(14400, Cache::lifetime(null, 'test'));
@@ -147,7 +150,7 @@ class CacheTest extends TestCase
      *
      * @throws Exception
      */
-    public function testExpiration()
+    public function testExpiration(): void
     {
         Cache::path($this->tempDirectory);
         Cache::lifetime(4);
@@ -175,7 +178,7 @@ class CacheTest extends TestCase
      *
      * @throws Exception
      */
-    public function testGet()
+    public function testGet(): void
     {
         Cache::path($this->tempDirectory);
         Cache::lifetime(4);
@@ -204,7 +207,7 @@ class CacheTest extends TestCase
      *
      * @throws Exception
      */
-    public function testPut()
+    public function testPut(): void
     {
         Cache::path($this->tempDirectory);
         Cache::lifetime(4);
@@ -233,7 +236,7 @@ class CacheTest extends TestCase
      *
      * @throws Exception
      */
-    public function testPutPathNotSet()
+    public function testPutPathNotSet(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Path not set.');
@@ -245,7 +248,7 @@ class CacheTest extends TestCase
      *
      * @throws Exception
      */
-    public function testPutLifetimeNotSet()
+    public function testPutLifetimeNotSet(): void
     {
         Cache::path($this->tempDirectory);
         $this->expectException(Exception::class);
@@ -258,7 +261,7 @@ class CacheTest extends TestCase
      *
      * @throws Exception
      */
-    public function testHas()
+    public function testHas(): void
     {
         // Validate that key does not exist.
         $this->assertFalse(Cache::has('test'));
@@ -277,7 +280,7 @@ class CacheTest extends TestCase
      *
      * @throws Exception
      */
-    public function testForget()
+    public function testForget(): void
     {
         // Put test data.
         Cache::path($this->tempDirectory);
@@ -298,7 +301,7 @@ class CacheTest extends TestCase
      *
      * @throws Exception
      */
-    public function testFlush()
+    public function testFlush(): void
     {
         // Put test data.
         Cache::path($this->tempDirectory);

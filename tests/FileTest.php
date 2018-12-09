@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\CoRex\Filesystem;
 
 use CoRex\Filesystem\Directory;
@@ -9,12 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 class FileTest extends TestCase
 {
+    /** @var string */
     private $tempDirectory;
 
     /**
      * Setup.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->tempDirectory = sys_get_temp_dir();
@@ -25,7 +28,7 @@ class FileTest extends TestCase
     /**
      * Tear down.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         Directory::delete($this->tempDirectory);
@@ -34,7 +37,7 @@ class FileTest extends TestCase
     /**
      * Test get temp filename.
      */
-    public function testGetTempFilename()
+    public function testGetTempFilename(): void
     {
         $filename1 = File::getTempFilename($this->tempDirectory);
         $filename2 = File::getTempFilename($this->tempDirectory);
@@ -46,10 +49,10 @@ class FileTest extends TestCase
     /**
      * Test get temp filename default temp directory.
      */
-    public function testGetTempFilenameDefaultTempDirectory()
+    public function testGetTempFilenameDefaultTempDirectory(): void
     {
         $filename = File::getTempFilename();
-        $this->assertTrue($filename != '');
+        $this->assertTrue($filename !== '');
         if (File::exist($filename)) {
             File::delete($filename);
         }
@@ -58,7 +61,7 @@ class FileTest extends TestCase
     /**
      * Test touch.
      */
-    public function testTouch()
+    public function testTouch(): void
     {
         $filename = $this->tempDirectory . '/test';
         $this->assertFalse(File::exist($filename));
@@ -69,7 +72,7 @@ class FileTest extends TestCase
     /**
      * Test exist.
      */
-    public function testExist()
+    public function testExist(): void
     {
         $filename = File::getTempFilename($this->tempDirectory);
         touch($filename);
@@ -81,7 +84,7 @@ class FileTest extends TestCase
     /**
      * Test get.
      */
-    public function testGet()
+    public function testGet(): void
     {
         $test = 'test';
         $filename = File::getTempFilename($this->tempDirectory);
@@ -92,13 +95,13 @@ class FileTest extends TestCase
     /**
      * Test get default value.
      */
-    public function testGetDefaultValue()
+    public function testGetDefaultValue(): void
     {
         $filename = File::getTempFilename($this->tempDirectory);
         if (File::exist($filename)) {
             File::delete($filename);
         }
-        $check = md5(mt_rand(1, 100000));
+        $check = md5((string)mt_rand(1, 100000));
         $checkValue = File::get($filename, $check);
         $this->assertEquals($check, $checkValue);
     }
@@ -106,7 +109,7 @@ class FileTest extends TestCase
     /**
      * Test get lines.
      */
-    public function testGetLines()
+    public function testGetLines(): void
     {
         $lines = ['test1', 'test2'];
 
@@ -124,7 +127,7 @@ class FileTest extends TestCase
     /**
      * Test put.
      */
-    public function testPut()
+    public function testPut(): void
     {
         $this->testGet();
     }
@@ -132,7 +135,7 @@ class FileTest extends TestCase
     /**
      * Test prepend.
      */
-    public function testPrepend()
+    public function testPrepend(): void
     {
         $test = 'test';
 
@@ -151,13 +154,13 @@ class FileTest extends TestCase
     /**
      * Test prepend file not exist.
      */
-    public function testPrependFileNotExist()
+    public function testPrependFileNotExist(): void
     {
         $filename = File::getTempFilename($this->tempDirectory);
         if (File::exist($filename)) {
             File::delete($filename);
         }
-        $check = md5(mt_rand(1, 100000));
+        $check = md5((string)mt_rand(1, 100000));
         File::prepend($filename, $check);
         $this->assertEquals($check, File::get($filename));
     }
@@ -165,7 +168,7 @@ class FileTest extends TestCase
     /**
      * Append.
      */
-    public function testAppend()
+    public function testAppend(): void
     {
         $test = 'test';
 
@@ -184,7 +187,7 @@ class FileTest extends TestCase
     /**
      * Test put lines.
      */
-    public function testPutLines()
+    public function testPutLines(): void
     {
         $lines = ['test1', 'test2'];
         $filename = File::getTempFilename($this->tempDirectory);
@@ -195,7 +198,7 @@ class FileTest extends TestCase
     /**
      * Test prepend lines.
      */
-    public function testPrependLines()
+    public function testPrependLines(): void
     {
         $lines1 = ['test1', 'test2'];
         $lines2 = ['test3', 'test4'];
@@ -223,7 +226,7 @@ class FileTest extends TestCase
     /**
      * Test append lines.
      */
-    public function testAppendLines()
+    public function testAppendLines(): void
     {
         $lines1 = ['test1', 'test2'];
         $lines2 = ['test3', 'test4'];
@@ -251,7 +254,7 @@ class FileTest extends TestCase
     /**
      * Test get stub.
      */
-    public function testGetStub()
+    public function testGetStub(): void
     {
         $stub = '({firstname}/{lastname})';
         $result = str_replace('{firstname}', 'test1', $stub);
@@ -267,7 +270,7 @@ class FileTest extends TestCase
     /**
      * Test get template.
      */
-    public function testGetTemplate()
+    public function testGetTemplate(): void
     {
         $template = '({firstname}/{lastname})';
         $result = str_replace('{firstname}', 'test1', $template);
@@ -291,7 +294,7 @@ class FileTest extends TestCase
     /**
      * Test get json.
      */
-    public function testGetJson()
+    public function testGetJson(): void
     {
         $lines = ['firstname' => 'test1', 'lastname' => 'test2'];
         $filename = File::getTempFilename($this->tempDirectory, '', 'json');
@@ -305,7 +308,7 @@ class FileTest extends TestCase
     /**
      * Test get json invalid json.
      */
-    public function testGetJsonInvalidJson()
+    public function testGetJsonInvalidJson(): void
     {
         $filename = File::getTempFilename($this->tempDirectory, '', 'json');
         File::put($filename, '.invalid.json');
@@ -315,7 +318,7 @@ class FileTest extends TestCase
     /**
      * Test put json.
      */
-    public function testPutJson()
+    public function testPutJson(): void
     {
         $this->testGetJson();
     }
@@ -323,7 +326,7 @@ class FileTest extends TestCase
     /**
      * Test delete.
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $filename = File::getTempFilename($this->tempDirectory);
         touch($filename);
@@ -335,10 +338,10 @@ class FileTest extends TestCase
     /**
      * Test copy.
      */
-    public function testCopy()
+    public function testCopy(): void
     {
         $filename = File::getTempFilename($this->tempDirectory, '', 'test');
-        $path = $this->tempDirectory . '/' . md5(microtime(true));
+        $path = $this->tempDirectory . '/' . md5((string)microtime(true));
 
         $this->assertTrue(File::exist($filename));
 
@@ -355,10 +358,10 @@ class FileTest extends TestCase
     /**
      * Test move.
      */
-    public function testMove()
+    public function testMove(): void
     {
         $filename = File::getTempFilename($this->tempDirectory, '', 'test');
-        $path = $this->tempDirectory . '/' . md5(microtime(true));
+        $path = $this->tempDirectory . '/' . md5((string)microtime(true));
 
         $this->assertTrue(File::exist($filename));
 
@@ -376,7 +379,7 @@ class FileTest extends TestCase
     /**
      * Test name.
      */
-    public function testName()
+    public function testName(): void
     {
         $path = '/tmp/this-is-a-test.txt';
         $this->assertEquals('this-is-a-test', File::name($path));
@@ -385,7 +388,7 @@ class FileTest extends TestCase
     /**
      * Test basename.
      */
-    public function testBasename()
+    public function testBasename(): void
     {
         $path = '/tmp/this-is-a-test.txt';
         $this->assertEquals('this-is-a-test.txt', File::basename($path));
@@ -394,7 +397,7 @@ class FileTest extends TestCase
     /**
      * Test dirname.
      */
-    public function testDirname()
+    public function testDirname(): void
     {
         $path = '/tmp/this-is-a-test.txt';
         $this->assertEquals('/tmp', File::dirname($path));
@@ -403,7 +406,7 @@ class FileTest extends TestCase
     /**
      * Test extension.
      */
-    public function testExtension()
+    public function testExtension(): void
     {
         $path = '/tmp/this-is-a-test.txt';
         $this->assertEquals('txt', File::extension($path));
@@ -412,12 +415,12 @@ class FileTest extends TestCase
     /**
      * Test type.
      */
-    public function testType()
+    public function testType(): void
     {
         $path = $this->tempDirectory . '/this-is-a-test.txt';
 
         // Check non-existent file.
-        $this->assertFalse(File::type($path));
+        $this->assertEquals('', File::type($path));
 
         // Check file.
         touch($path);
@@ -427,12 +430,12 @@ class FileTest extends TestCase
     /**
      * Test mimetype.
      */
-    public function testMimeType()
+    public function testMimeType(): void
     {
         $path = $this->tempDirectory . '/this-is-a-test.txt';
 
         // Check non-existent file.
-        $this->assertFalse(File::mimetype($path));
+        $this->assertEquals('', File::mimetype($path));
 
         // Check file.
         touch($path);
@@ -442,7 +445,7 @@ class FileTest extends TestCase
     /**
      * Test size.
      */
-    public function testSize()
+    public function testSize(): void
     {
         $filename1 = File::getTempFilename($this->tempDirectory);
         $filename2 = File::getTempFilename($this->tempDirectory);
@@ -459,7 +462,7 @@ class FileTest extends TestCase
     /**
      * Test last modified.
      */
-    public function testLastModified()
+    public function testLastModified(): void
     {
         $filename = File::getTempFilename($this->tempDirectory);
         $modifiedDatetime1 = File::lastModified($filename);
@@ -472,12 +475,12 @@ class FileTest extends TestCase
     /**
      * Test is file.
      */
-    public function testIsFile()
+    public function testIsFile(): void
     {
         $path = $this->tempDirectory . '/this-is-a-test.txt';
 
         // Check non-existent file.
-        $this->assertFalse(File::type($path));
+        $this->assertEquals('', File::type($path));
 
         // Check file.
         touch($path);

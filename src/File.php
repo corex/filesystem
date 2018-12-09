@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CoRex\Filesystem;
 
 use CoRex\Helpers\Str;
@@ -14,12 +16,12 @@ class File
      * @param string $extension Default ''.
      * @return string
      */
-    public static function getTempFilename($path = '', $prefix = '', $extension = '')
+    public static function getTempFilename(string $path = '', string $prefix = '', string $extension = ''): string
     {
-        if ($path == '') {
+        if ($path === '') {
             $path = sys_get_temp_dir();
         }
-        if ($extension != '' && substr($extension, 0, 1) != '.') {
+        if ($extension !== '' && substr($extension, 0, 1) !== '.') {
             $extension = '.' . $extension;
         }
         $filename = Str::unique($prefix, $extension);
@@ -33,9 +35,9 @@ class File
      * Touch.
      *
      * @param string $filename
-     * @param integer $time Default null which means current.
+     * @param int $time Default null which means current.
      */
-    public static function touch($filename, $time = null)
+    public static function touch(string $filename, ?int $time = null): void
     {
         if ($time === null) {
             $time = time();
@@ -47,9 +49,9 @@ class File
      * Check if file exist.
      *
      * @param string $filename
-     * @return boolean
+     * @return bool
      */
-    public static function exist($filename)
+    public static function exist(string $filename): bool
     {
         return file_exists($filename);
     }
@@ -61,7 +63,7 @@ class File
      * @param mixed $defaultValue Default ''.
      * @return string
      */
-    public static function get($filename, $defaultValue = '')
+    public static function get(string $filename, string $defaultValue = ''): string
     {
         if (!self::exist($filename)) {
             return $defaultValue;
@@ -73,14 +75,14 @@ class File
      * Get lines.
      *
      * @param string $filename
-     * @param array $defaultValue Default [].
-     * @return array
+     * @param string[] $defaultValue Default [].
+     * @return string[]
      */
-    public static function getLines($filename, array $defaultValue = [])
+    public static function getLines(string $filename, array $defaultValue = []): array
     {
         $content = self::get($filename);
         $content = str_replace("\r", '', $content);
-        if (trim($content) != '') {
+        if (trim($content) !== '') {
             return explode("\n", $content);
         }
         return $defaultValue;
@@ -91,9 +93,9 @@ class File
      *
      * @param string $filename
      * @param string $content
-     * @return integer
+     * @return int
      */
-    public static function put($filename, $content)
+    public static function put(string $filename, string $content): int
     {
         return file_put_contents($filename, $content);
     }
@@ -103,9 +105,9 @@ class File
      *
      * @param string $filename
      * @param string $content
-     * @return integer
+     * @return int
      */
-    public static function prepend($filename, $content)
+    public static function prepend(string $filename, string $content): int
     {
         if (self::exist($filename)) {
             return self::put($filename, $content . self::get($filename));
@@ -118,9 +120,9 @@ class File
      *
      * @param string $filename
      * @param string $content
-     * @return integer
+     * @return int
      */
-    public static function append($filename, $content)
+    public static function append(string $filename, string $content): int
     {
         return file_put_contents($filename, $content, FILE_APPEND);
     }
@@ -129,11 +131,11 @@ class File
      * Put lines.
      *
      * @param string $filename
-     * @param array $lines
+     * @param string[] $lines
      * @param string $separator Default "\n".
-     * @return integer
+     * @return int
      */
-    public static function putLines($filename, array $lines, $separator = "\n")
+    public static function putLines(string $filename, array $lines, string $separator = "\n"): int
     {
         return self::put($filename, implode($separator, $lines));
     }
@@ -142,11 +144,11 @@ class File
      * Prepend lines.
      *
      * @param string $filename
-     * @param array $lines
+     * @param string[] $lines
      * @param string $separator Default "\n".
-     * @return integer
+     * @return int
      */
-    public static function prependLines($filename, array $lines, $separator = "\n")
+    public static function prependLines(string $filename, array $lines, string $separator = "\n"): int
     {
         if (self::exist($filename)) {
             $existingLines = self::getLines($filename);
@@ -160,11 +162,11 @@ class File
      * Append lines.
      *
      * @param string $filename
-     * @param array $lines
+     * @param string[] $lines
      * @param string $separator Default "\n".
-     * @return integer
+     * @return int
      */
-    public static function appendLines($filename, array $lines, $separator = "\n")
+    public static function appendLines(string $filename, array $lines, string $separator = "\n"): int
     {
         if (self::exist($filename)) {
             $existingLines = self::getLines($filename);
@@ -178,11 +180,11 @@ class File
      * Get stub.
      *
      * @param string $filename
-     * @param array $tokens Default []. Format ['token' => 'value']. Replaces {token} with value.
+     * @param string[] $tokens Default []. Format ['token' => 'value']. Replaces {token} with value.
      * @param mixed $defaultContent Default ''.
      * @return string
      */
-    public static function getStub($filename, array $tokens = [], $defaultContent = '')
+    public static function getStub(string $filename, array $tokens = [], string $defaultContent = ''): string
     {
         return self::getTemplate($filename, $tokens, $defaultContent, 'stub');
     }
@@ -191,13 +193,17 @@ class File
      * Get template.
      *
      * @param string $filename
-     * @param array $tokens Default []. Format ['token' => 'value']. Replaces {token} with value.
+     * @param string[] $tokens Default []. Format ['token' => 'value']. Replaces {token} with value.
      * @param mixed $defaultContent Default ''.
      * @param string $extension Default 'tpl'.
      * @return string
      */
-    public static function getTemplate($filename, array $tokens = [], $defaultContent = '', $extension = 'tpl')
-    {
+    public static function getTemplate(
+        string $filename,
+        array $tokens = [],
+        string $defaultContent = '',
+        string $extension = 'tpl'
+    ): string {
         if (!Str::endsWith($filename, '.' . $extension)) {
             $filename .= '.' . $extension;
         }
@@ -205,7 +211,7 @@ class File
             return $defaultContent;
         }
         $template = self::get($filename, $defaultContent);
-        if ($template != '' && count($tokens) > 0) {
+        if ($template !== '' && count($tokens) > 0) {
             foreach ($tokens as $token => $value) {
                 $template = str_replace('{' . $token . '}', $value, $template);
             }
@@ -217,20 +223,20 @@ class File
      * Load json.
      *
      * @param string $filename
-     * @param array $defaultValue Default [].
-     * @return array
+     * @param mixed[] $defaultValue Default [].
+     * @return mixed[]
      */
-    public static function getJson($filename, array $defaultValue = [])
+    public static function getJson(string $filename, array $defaultValue = []): array
     {
         if (!Str::endsWith($filename, '.json')) {
             $filename .= '.json';
         }
         $data = self::get($filename);
-        if ($data == '') {
+        if ($data === '') {
             return $defaultValue;
         }
         $data = json_decode($data, true);
-        if (is_null($data) || $data === false) {
+        if ($data === null || $data === false) {
             $data = [];
         }
         return $data;
@@ -240,10 +246,10 @@ class File
      * Save json.
      *
      * @param string $filename
-     * @param array $data
-     * @param boolean $prettyPrint Default true.
+     * @param mixed[] $data
+     * @param bool $prettyPrint Default true.
      */
-    public static function putJson($filename, array $data, $prettyPrint = true)
+    public static function putJson(string $filename, array $data, bool $prettyPrint = true): void
     {
         if (!Str::endsWith($filename, '.json')) {
             $filename .= '.json';
@@ -260,9 +266,9 @@ class File
      * Delete file.
      *
      * @param string $filename
-     * @return boolean
+     * @return bool
      */
-    public static function delete($filename)
+    public static function delete(string $filename): bool
     {
         return @unlink($filename);
     }
@@ -272,9 +278,9 @@ class File
      *
      * @param string $filename
      * @param string $path
-     * @return boolean
+     * @return bool
      */
-    public static function copy($filename, $path)
+    public static function copy(string $filename, string $path): bool
     {
         return @copy($filename, $path . '/' . self::basename($filename));
     }
@@ -284,9 +290,9 @@ class File
      *
      * @param string $filename
      * @param string $path
-     * @return boolean
+     * @return bool
      */
-    public static function move($filename, $path)
+    public static function move(string $filename, string $path): bool
     {
         return @rename($filename, $path . '/' . self::basename($filename));
     }
@@ -295,9 +301,9 @@ class File
      * Name.
      *
      * @param string $path
-     * @return mixed
+     * @return string
      */
-    public static function name($path)
+    public static function name(string $path): string
     {
         return pathinfo($path, PATHINFO_FILENAME);
     }
@@ -306,9 +312,9 @@ class File
      * Basename.
      *
      * @param string $path
-     * @return mixed
+     * @return string
      */
-    public static function basename($path)
+    public static function basename(string $path): string
     {
         return pathinfo($path, PATHINFO_BASENAME);
     }
@@ -317,9 +323,9 @@ class File
      * Dirname.
      *
      * @param string $path
-     * @return mixed
+     * @return string
      */
-    public static function dirname($path)
+    public static function dirname(string $path): string
     {
         return pathinfo($path, PATHINFO_DIRNAME);
     }
@@ -328,9 +334,9 @@ class File
      * Extension.
      *
      * @param string $path
-     * @return mixed
+     * @return string
      */
-    public static function extension($path)
+    public static function extension(string $path): string
     {
         return pathinfo($path, PATHINFO_EXTENSION);
     }
@@ -341,29 +347,31 @@ class File
      * @param string $path
      * @return string
      */
-    public static function type($path)
+    public static function type(string $path): string
     {
-        return @filetype($path);
+        $result = @filetype($path);
+        return $result !== false ? $result : '';
     }
 
     /**
      * Mimetype.
      *
      * @param string $path
-     * @return mixed
+     * @return string
      */
-    public static function mimetype($path)
+    public static function mimetype(string $path): string
     {
-        return @finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
+        $result = @finfo_file(finfo_open(FILEINFO_MIME_TYPE), $path);
+        return $result !== false ? $result : '';
     }
 
     /**
      * Size.
      *
      * @param string $path
-     * @return integer
+     * @return int
      */
-    public static function size($path)
+    public static function size(string $path): int
     {
         return filesize($path);
     }
@@ -372,9 +380,9 @@ class File
      * Last modified.
      *
      * @param string $path
-     * @return integer
+     * @return int
      */
-    public static function lastModified($path)
+    public static function lastModified(string $path): int
     {
         clearstatcache();
         return filemtime($path);
@@ -384,9 +392,9 @@ class File
      * Is file.
      *
      * @param string $path
-     * @return boolean
+     * @return bool
      */
-    public static function isFile($path)
+    public static function isFile(string $path): bool
     {
         return is_file($path);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\CoRex\Filesystem;
 
 use CoRex\Filesystem\Directory;
@@ -8,14 +10,19 @@ use PHPUnit\Framework\TestCase;
 
 class DirectoryTest extends TestCase
 {
+    /** @var string */
     private $tempDirectory;
+
+    /** @var string */
     private $filename1;
+
+    /** @var string */
     private $filename2;
 
     /**
      * Setup.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->tempDirectory = sys_get_temp_dir();
@@ -30,7 +37,7 @@ class DirectoryTest extends TestCase
     /**
      * Tear down.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         Directory::delete($this->tempDirectory);
@@ -39,7 +46,7 @@ class DirectoryTest extends TestCase
     /**
      * Test exist.
      */
-    public function testExist()
+    public function testExist(): void
     {
         $this->assertFalse(Directory::exist($this->tempDirectory));
         mkdir($this->tempDirectory);
@@ -49,7 +56,7 @@ class DirectoryTest extends TestCase
     /**
      * Test exist.
      */
-    public function testIsDirectory()
+    public function testIsDirectory(): void
     {
         $this->assertFalse(Directory::isDirectory($this->tempDirectory));
         mkdir($this->tempDirectory);
@@ -59,7 +66,7 @@ class DirectoryTest extends TestCase
     /**
      * Test is writeable.
      */
-    public function testIsWritable()
+    public function testIsWritable(): void
     {
         $this->assertFalse(Directory::isWritable($this->tempDirectory));
         mkdir($this->tempDirectory);
@@ -69,7 +76,7 @@ class DirectoryTest extends TestCase
     /**
      * Test make.
      */
-    public function testMake()
+    public function testMake(): void
     {
         $this->assertFalse(Directory::exist($this->tempDirectory));
         Directory::make($this->tempDirectory);
@@ -79,7 +86,7 @@ class DirectoryTest extends TestCase
     /**
      * Test entries.
      */
-    public function testEntries()
+    public function testEntries(): void
     {
         $this->createTestData('test');
 
@@ -98,7 +105,7 @@ class DirectoryTest extends TestCase
     /**
      * Test entries not path.
      */
-    public function testEntriesNotPath()
+    public function testEntriesNotPath(): void
     {
         $entries = Directory::entries(null, '*');
         $this->assertEquals([], $entries);
@@ -108,7 +115,7 @@ class DirectoryTest extends TestCase
     /**
      * Test entries no criteria and type string.
      */
-    public function testEntriesNoCriteriaMatchAndTypeString()
+    public function testEntriesNoCriteriaMatchAndTypeString(): void
     {
         $this->createTestData('test');
 
@@ -120,7 +127,7 @@ class DirectoryTest extends TestCase
     /**
      * Test delete.
      */
-    public function testDeleteClean()
+    public function testDeleteClean(): void
     {
         $this->createTestData('test');
         $this->createTestData('test2');
@@ -143,7 +150,7 @@ class DirectoryTest extends TestCase
     /**
      * Test temp().
      */
-    public function testTemp()
+    public function testTemp(): void
     {
         $this->assertEquals(sys_get_temp_dir(), Directory::temp());
     }
@@ -153,7 +160,7 @@ class DirectoryTest extends TestCase
      *
      * @param string $subDirectory
      */
-    private function createTestData($subDirectory)
+    private function createTestData(string $subDirectory): void
     {
         Directory::make($this->tempDirectory . '/' . $subDirectory);
         file_put_contents($this->tempDirectory . '/' . $this->filename1, 'test');

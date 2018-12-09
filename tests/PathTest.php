@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\CoRex\Filesystem;
 
 use CoRex\Filesystem\Path;
@@ -7,15 +9,22 @@ use PHPUnit\Framework\TestCase;
 
 class PathTest extends TestCase
 {
+    /** @var string */
     private $rootDirectory;
+
+    /** @var string */
     private $currentVendor;
+
+    /** @var string */
     private $currentPackage;
+
+    /** @var string */
     private $vendorBaseDirectory;
 
     /**
      * Setup.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -36,7 +45,7 @@ class PathTest extends TestCase
     /**
      * Test get root.
      */
-    public function testRoot()
+    public function testRoot(): void
     {
         $this->assertEquals($this->rootDirectory, Path::root());
         $this->assertEquals($this->rootDirectory . '/test1/test2', Path::root(['test1', 'test2']));
@@ -46,7 +55,7 @@ class PathTest extends TestCase
     /**
      * Test package current.
      */
-    public function testPackageCurrent()
+    public function testPackageCurrent(): void
     {
         $expected = $this->rootDirectory . '/' . $this->vendorBaseDirectory;
         $expected .= '/' . $this->currentVendor . '/' . $this->currentPackage;
@@ -59,7 +68,7 @@ class PathTest extends TestCase
     /**
      * Test package.
      */
-    public function testPackage()
+    public function testPackage(): void
     {
         $this->assertEquals(
             $this->rootDirectory . '/' . $this->vendorBaseDirectory . '/test1/test2',
@@ -70,7 +79,7 @@ class PathTest extends TestCase
     /**
      * Test package segments as array.
      */
-    public function testPackageSegmentsAsArray()
+    public function testPackageSegmentsAsArray(): void
     {
         $this->assertEquals(
             $this->rootDirectory . '/' . $this->vendorBaseDirectory . '/test1/test2/a/b/c/d',
@@ -81,7 +90,7 @@ class PathTest extends TestCase
     /**
      * Test package segments as dot notation.
      */
-    public function testPackageSegmentsAsDotNotation()
+    public function testPackageSegmentsAsDotNotation(): void
     {
         $this->assertEquals(
             $this->rootDirectory . '/' . $this->vendorBaseDirectory . '/test1/test2/a/b/c/d',
@@ -92,7 +101,7 @@ class PathTest extends TestCase
     /**
      * Test package segments as dot notation.
      */
-    public function testPackageSegmentsAsString()
+    public function testPackageSegmentsAsString(): void
     {
         $this->assertEquals(
             $this->rootDirectory . '/' . $this->vendorBaseDirectory . '/test1/test2/a/b/c/d',
@@ -103,7 +112,7 @@ class PathTest extends TestCase
     /**
      * Test package segments as single.
      */
-    public function testPackageSegmentsAsSingle()
+    public function testPackageSegmentsAsSingle(): void
     {
         $this->assertEquals(
             $this->rootDirectory . '/' . $this->vendorBaseDirectory . '/test1/test2/a',
@@ -114,7 +123,7 @@ class PathTest extends TestCase
     /**
      * Test vendor name.
      */
-    public function testVendorName()
+    public function testVendorName(): void
     {
         $this->assertEquals($this->currentVendor, Path::vendorName());
     }
@@ -122,7 +131,7 @@ class PathTest extends TestCase
     /**
      * Test package name.
      */
-    public function testPackageName()
+    public function testPackageName(): void
     {
         $this->assertEquals($this->currentPackage, Path::packageName());
     }

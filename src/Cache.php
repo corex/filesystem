@@ -1,21 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CoRex\Filesystem;
 
 class Cache
 {
+    /** @var string */
     private static $marker = '||';
+
+    /** @var string */
     private static $path;
+
+    /** @var int */
     private static $seconds = 0;
 
     /**
      * Generate key based on input key and parameters. Used in more sophisticated keys.
      *
      * @param string $key
-     * @param array $params Default [].
+     * @param string[] $params Default [].
      * @return string
      */
-    public static function key($key, array $params = [])
+    public static function key(string $key, array $params = []): string
     {
         $key = md5(serialize($key));
         if (count($params) > 0) {
@@ -28,15 +35,15 @@ class Cache
      * Set/get path for storages.
      *
      * @param string $path Default null which means not set.
-     * @param boolean $force Default false.
+     * @param bool $force Default false.
      * @return string If null, then not set.
      * @throws \Exception
      */
-    public static function path($path = null, $force = false)
+    public static function path(?string $path = null, bool $force = false): ?string
     {
         if ($path !== null || $force) {
             if ($path !== null) {
-                if (!is_writeable($path)) {
+                if (!is_writable($path)) {
                     throw new \Exception('Path is not writable.');
                 }
             }
@@ -48,22 +55,22 @@ class Cache
     /**
      * Set/get lifetime.
      *
-     * @param string $lifetime Add 'm' for minutes, 'h' for hours. If not specified, seconds are assumed.
+     * @param string|int $lifetime Add 'm' for minutes, 'h' for hours. If not specified, seconds are assumed.
      * @param string $storage Default 'global'.
-     * @return integer Lifetime in seconds.
+     * @return int Lifetime in seconds.
      */
-    public static function lifetime($lifetime = null, $storage = 'global')
+    public static function lifetime($lifetime = null, string $storage = 'global'): int
     {
         if ($lifetime !== null) {
-            $seconds = strtolower($lifetime);
+            $seconds = strtolower((string)$lifetime);
 
             // Convert to minutes if hour.
-            if (substr($seconds, -1) == 'h') {
+            if (substr($seconds, -1) === 'h') {
                 $seconds = (intval($seconds) * 60) . 'm';
             }
 
             // Convert to seconds if minutes.
-            if (substr($seconds, -1) == 'm') {
+            if (substr($seconds, -1) === 'm') {
                 $seconds = (intval($seconds) * 60) . 's';
             }
 
@@ -83,9 +90,9 @@ class Cache
      *
      * @param string $key
      * @param string $storage Default 'global'.
-     * @return integer If not exist, 0 is returned.
+     * @return int If not set, null is returned.
      */
-    public static function expiration($key, $storage = 'global')
+    public static function expiration(string $key, ?string $storage = 'global'): ?int
     {
         if (!self::has($key)) {
             return null;
@@ -100,9 +107,9 @@ class Cache
 
         // Extract expiration.
         $markerPos = strpos($content, self::$marker);
-        $expiration = 0;
+        $expiration = null;
         if ($markerPos !== false) {
-            $expiration = substr($content, 0, $markerPos);
+            $expiration = intval(substr($content, 0, $markerPos));
         }
 
         return $expiration;
@@ -116,7 +123,7 @@ class Cache
      * @param string $storage Default 'global'.
      * @return mixed|null
      */
-    public static function get($key, $defaultValue = null, $storage = 'global')
+    public static function get(string $key, $defaultValue = null, string $storage = 'global')
     {
         if (!self::has($key)) {
             return $defaultValue;
@@ -154,7 +161,7 @@ class Cache
      * @param string $storage Default 'global'.
      * @throws \Exception
      */
-    public static function put($key, $value, $storage = 'global')
+    public static function put(string $key, $value, string $storage = 'global'): void
     {
         self::initialize($storage);
         $expiration = time() + intval(self::$seconds);
@@ -168,9 +175,9 @@ class Cache
      *
      * @param string $key
      * @param string $storage Default 'global'.
-     * @return boolean
+     * @return bool
      */
-    public static function has($key, $storage = 'global')
+    public static function has(string $key, string $storage = 'global'): bool
     {
         $fileKey = self::key($key);
         return file_exists(self::$path . '/' . $storage . '/' . $fileKey);
@@ -182,7 +189,7 @@ class Cache
      * @param string $key
      * @param string $storage Default 'global'.
      */
-    public static function forget($key, $storage = 'global')
+    public static function forget(string $key, string $storage = 'global'): void
     {
         $fileKey = self::key($key);
         if (self::has($key)) {
@@ -195,12 +202,12 @@ class Cache
      *
      * @param string $storage Default 'global'.
      */
-    public static function flush($storage = 'global')
+    public static function flush(string $storage = 'global'): void
     {
         $filenames = scandir(self::$path . '/' . $storage);
         if (count($filenames) > 0) {
             foreach ($filenames as $filename) {
-                if (substr($filename, 0, 1) == '.') {
+                if (substr($filename, 0, 1) === '.') {
                     continue;
                 }
                 @unlink(self::$path . '/' . $storage . '/' . $filename);
@@ -214,12 +221,12 @@ class Cache
      * @param string $storage
      * @throws \Exception
      */
-    private static function initialize($storage)
+    private static function initialize(string $storage): void
     {
         if (self::$path === null) {
             throw new \Exception('Path not set.');
         }
-        if (self::lifetime(null, $storage) == 0) {
+        if (self::lifetime(null, $storage) === 0) {
             throw new \Exception('Lifetime not set.');
         }
         Directory::make(self::$path . '/' . $storage);

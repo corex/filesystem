@@ -1,20 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CoRex\Filesystem;
 
 class Directory
 {
-    const TYPE_DIRECTORY = 'dir';
-    const TYPE_LINK = 'link';
-    const TYPE_FILE = 'file';
+    public const TYPE_DIRECTORY = 'dir';
+    public const TYPE_LINK = 'link';
+    public const TYPE_FILE = 'file';
 
     /**
      * Check if directory exists.
      *
      * @param string $path
-     * @return boolean
+     * @return bool
      */
-    public static function exist($path)
+    public static function exist(string $path): bool
     {
         return is_dir($path);
     }
@@ -23,9 +25,9 @@ class Directory
      * Check if it is a directory entry.
      *
      * @param string $path
-     * @return boolean
+     * @return bool
      */
-    public static function isDirectory($path)
+    public static function isDirectory(string $path): bool
     {
         return is_dir($path);
     }
@@ -34,9 +36,9 @@ class Directory
      * Check if directory is writable.
      *
      * @param string $path
-     * @return boolean
+     * @return bool
      */
-    public static function isWritable($path)
+    public static function isWritable(string $path): bool
     {
         return is_writable($path);
     }
@@ -45,9 +47,9 @@ class Directory
      * Make directory.
      *
      * @param string $path
-     * @param integer $mode See mkdir() for options.
+     * @param int $mode See mkdir() for options.
      */
-    public static function make($path, $mode = 0777)
+    public static function make(string $path, int $mode = 0777): void
     {
         if (!is_dir($path)) {
             mkdir($path, $mode, true);
@@ -59,35 +61,41 @@ class Directory
      *
      * @param string $path
      * @param string $criteria
-     * @param string|array $types List of types to return. Use constants Directory::TYPE_*. Default [] which means all.
-     * @param boolean $recursive Default false.
-     * @param array $attributes Default []. Used internally.
-     * @return array
+     * @param string|string[] $types List of types to return. Use Directory::TYPE_*. Default [] which means all.
+     * @param bool $recursive Default false.
+     * @param string[] $attributes Default []. Used internally.
+     * @return string[]
      */
-    public static function entries($path, $criteria, $types = [], $recursive = false, array $attributes = [])
-    {
-        if (count($attributes) == 0) {
+    public static function entries(
+        ?string $path,
+        string $criteria,
+        $types = [],
+        bool $recursive = false,
+        array $attributes = []
+    ): array {
+        if (count($attributes) === 0) {
             $attributes = [
                 'pathRoot' => $path
             ];
         }
         $entries = [];
-        if (!is_dir($path)) {
+        if ($path === null || !is_dir($path)) {
             return $entries;
         }
 
         if (is_string($types)) {
             $types = [$types];
         }
-        if (count($types) == 0) {
+        if (count($types) === 0) {
             $types = [self::TYPE_DIRECTORY, self::TYPE_LINK, self::TYPE_FILE];
         }
 
-        if ($handle = opendir(rtrim($path, '/'))) {
+        $handle = opendir(rtrim($path, '/'));
+        if ($handle) {
             while ($entryName = readdir($handle)) {
 
                 // Validate entry.
-                if (substr($entryName, 0, 1) == '.') {
+                if (substr($entryName, 0, 1) === '.') {
                     continue;
                 }
                 if (!fnmatch($criteria, $entryName)) {
@@ -104,7 +112,7 @@ class Directory
                 }
 
                 // Get file modified time.
-                if ($type != Directory::TYPE_LINK) {
+                if ($type !== self::TYPE_LINK) {
                     $modified = filemtime($path . '/' . $entryName);
                 } else {
                     $modified = 0;
@@ -137,7 +145,7 @@ class Directory
                 }
 
                 // Recursive.
-                if ($recursive && $type == self::TYPE_DIRECTORY) {
+                if ($recursive && $type === self::TYPE_DIRECTORY) {
                     $recursiveEntries = static::entries(
                         $path . '/' . $entryName,
                         $criteria,
@@ -157,13 +165,13 @@ class Directory
      * Delete.
      *
      * @param string $path
-     * @param boolean $preserveRoot Default false.
-     * @return boolean
+     * @param bool $preserveRoot Default false.
+     * @return bool
      */
-    public static function delete($path, $preserveRoot = false)
+    public static function delete(?string $path, bool $preserveRoot = false): bool
     {
         // Ensure that we are not doing something stupid.
-        if (!is_string($path) || trim($path) == '' || trim($path) == '/') {
+        if (!is_string($path) || trim($path) === '' || trim($path) === '/') {
             return false;
         }
 
@@ -175,12 +183,12 @@ class Directory
         $entries = self::entries($path, '*', [], true);
         foreach ($entries as $entry) {
             $filename = $entry['path'] . '/' . $entry['name'];
-            if ($entry['type'] == self::TYPE_DIRECTORY) {
+            if ($entry['type'] === self::TYPE_DIRECTORY) {
                 self::delete($filename);
                 @rmdir($filename);
-            } elseif ($entry['type'] == self::TYPE_LINK) {
+            } elseif ($entry['type'] === self::TYPE_LINK) {
                 File::delete($filename);
-            } elseif ($entry['type'] == self::TYPE_FILE) {
+            } elseif ($entry['type'] === self::TYPE_FILE) {
                 File::delete($filename);
             }
         }
@@ -197,9 +205,9 @@ class Directory
      * Clean directory.
      *
      * @param string $path
-     * @return boolean
+     * @return bool
      */
-    public static function clean($path)
+    public static function clean(string $path): bool
     {
         return self::delete($path, true);
     }
@@ -209,7 +217,7 @@ class Directory
      *
      * @return string
      */
-    public static function temp()
+    public static function temp(): string
     {
         return sys_get_temp_dir();
     }

@@ -10,11 +10,11 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
-        "corex/helpers": "^1.0"
+        "php": "^7.2",
+        "corex/helpers": "^2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.1"
+        "phpunit/phpunit": "^7.5"
     },
     "autoload": {
         "psr-4": {
