@@ -33,6 +33,18 @@ class JsonTest extends TestCase
     }
 
     /**
+     * Test setFilename.
+     */
+    public function testSetFilename(): void
+    {
+        $json = new Json($this->tempFilename);
+        $this->assertEquals($this->tempFilename, $json->getFilename());
+        $check = md5((string)mt_rand(1, 100000));
+        $json->setFilename($check);
+        $this->assertEquals($check, $json->getFilename());
+    }
+
+    /**
      * Test getFilename.
      *
      * @throws \Exception

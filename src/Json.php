@@ -30,6 +30,16 @@ class Json
     }
 
     /**
+     * Set filename.
+     *
+     * @param string $filename
+     */
+    public function setFilename(string $filename): void
+    {
+        $this->filename = $filename;
+    }
+
+    /**
      * Get filename.
      *
      * @return string

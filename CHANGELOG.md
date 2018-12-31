@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 2.0.1
+
+### Added
+- Added Json->setFilename().
+
 ## 2.0.0
 
 ### Changed
