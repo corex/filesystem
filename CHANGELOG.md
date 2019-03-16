@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 2.0.2
+
+### Added
+- Added badges to readme.
+
 ## 2.0.1
 
 ### Added

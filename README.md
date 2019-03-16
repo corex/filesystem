@@ -1,6 +1,9 @@
 # Filesystem (directory, file, cache, ...)
 
-**_Versioning for this package follows http://semver.org/. Backwards compatibility might break on upgrade to major versions._**
+![Packagist](https://img.shields.io/packagist/v/corex/filesystem.svg)
+![License](https://img.shields.io/packagist/l/corex/filesystem.svg)
+![Build Status](https://travis-ci.org/corex/filesystem.svg?branch=master)
+![codecov](https://codecov.io/gh/corex/filesystem/branch/master/graph/badge.svg)
 
 
 ### Cache
