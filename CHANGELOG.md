@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 2.0.3
+
+### Changed
+- Changed private method addSegmentsToPath() to protected.
+
 ## 2.0.2
 
 ### Added

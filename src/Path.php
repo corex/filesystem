@@ -99,7 +99,7 @@ class Path
      * @param string|string[] $segments Dot notation is supported in string.
      * @return string
      */
-    private static function addSegmentsToPath(string $path, $segments): string
+    protected static function addSegmentsToPath(string $path, $segments): string
     {
         $segments = Arr::toArray($segments);
         if (count($segments) > 0) {
